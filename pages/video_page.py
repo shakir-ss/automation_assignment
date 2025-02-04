@@ -53,18 +53,31 @@ class VideoPage(BasePage):
 
     def continue_watching(self):
         self.click(self.CONTINUE_WATCHING)
+        time.sleep(5)
 
     def adjust_volume(self, level=50):
         # Switch to iframe if the video is embedded
         iframe = self.wait.until(EC.presence_of_element_located((By.TAG_NAME, "iframe")))
         self.driver.switch_to.frame(iframe)
+        print("in adjust volume")
+        # Move cursor on the video to make controls visible
+        video_player = self.wait.until(EC.presence_of_element_located((By.XPATH, "//div[@class='jw-media jw-reset']/video")))
+        ActionChains(self.driver).move_to_element(video_player).perform()
+        # time.sleep(60)
+        print("Cursor moved over video")
         volume_button = self.wait.until(EC.element_to_be_clickable(self.VOLUME_BUTTON))
+        print("Volume button found")
+        # settings_button = self.wait.until(EC.element_to_be_clickable(self.SETTINGS_BUTTON))
+        #
+        # # Use ActionChains to hover over the settings button to avoid click interception
+        # ActionChains(self.driver).move_to_element(settings_button).click().perform()
 
         # Use ActionChains to hover over the settings button to avoid click interception
-        ActionChains(self.driver).move_to_element(volume_button).perform()
+        # ActionChains(self.driver).move_to_element(volume_button).click().perform()
 
         volume_element = self.wait.until(EC.presence_of_element_located(self.VOLUME_SLIDER))
         self.driver.execute_script("arguments[0].value = arguments[1]", volume_element, level)
+
         # Switch back to the default content after interacting
         self.driver.switch_to.default_content()
 

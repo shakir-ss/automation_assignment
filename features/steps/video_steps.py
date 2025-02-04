@@ -41,7 +41,7 @@ def step_play_video(context):
 
 @when("I wait for 10 seconds")
 def step_wait_play(context):
-    time.sleep(5)
+    time.sleep(10)
 
 
 @when("I pause the video")
